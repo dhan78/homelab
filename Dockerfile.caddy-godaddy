@@ -1,0 +1,14 @@
+# Builder with Go 1.24+
+FROM golang:1.24-alpine AS builder
+RUN apk add --no-cache git bash curl
+
+# Install xcaddy
+RUN go install github.com/caddyserver/xcaddy/cmd/xcaddy@latest
+
+# Build Caddy with GoDaddy plugin
+WORKDIR /tmp
+RUN xcaddy build --output /tmp/caddy --with github.com/caddy-dns/godaddy
+
+# Final image
+FROM caddy:2.8.0
+COPY --from=builder /tmp/caddy /usr/bin/caddy

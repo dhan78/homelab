@@ -1,0 +1,37 @@
+version: "3.9"
+
+networks:
+  proxy:
+    external: true
+
+services:
+  caddy:
+    build:
+      context: .               # folder used as build context
+      dockerfile: Dockerfile.caddy-godaddy  # path to Dockerfile relative to context
+    container_name: caddy_server
+    ports:
+      - "8080:80"   # HTTP
+      - "8443:443"  # HTTPS
+    env_file:
+      - .env
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro,Z
+      - caddy_data:/data:Z
+      - caddy_config:/config:Z
+    networks:
+      - proxy
+    restart: unless-stopped
+
+  app:
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    container_name: node_app
+    networks:
+      - proxy
+    restart: unless-stopped
+
+volumes:
+  caddy_data:
+  caddy_config:
