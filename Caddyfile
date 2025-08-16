@@ -1,26 +1,57 @@
-
-# Apex domain + www → Node app
+# ==========================
+# Node App (apex domain + www)
+# ==========================
 jdlab.us, www.jdlab.us {
     reverse_proxy node_app:3000
 
     tls {
-      dns godaddy {
-        api_token {env.GODADDY_API_TOKEN}
-      }
-      propagation_delay 60s
-      propagation_timeout 5m
+        dns godaddy {
+            api_token {env.GODADDY_API_TOKEN}
+        }
+        propagation_delay 60s
+        propagation_timeout 5m
+    }
+
+    log {
+        output file /var/log/caddy/node_app.access.log
+        format json
     }
 }
 
-# Catch-all for any subdomain (desk, api, etc.)
+# Catch-all for other subdomains (desk, api, etc.)
 *.jdlab.us {
     reverse_proxy node_app:3000
 
     tls {
-      dns godaddy {
-        api_token {env.GODADDY_API_TOKEN}
-      }
-      propagation_delay 60s
-      propagation_timeout 5m
+        dns godaddy {
+            api_token {env.GODADDY_API_TOKEN}
+        }
+        propagation_delay 60s
+        propagation_timeout 5m
+    }
+
+    log {
+        output file /var/log/caddy/node_app_wildcard.access.log
+        format json
+    }
+}
+
+# ==========================
+# WG-Easy (VPN Web UI)
+# ==========================
+vpn.jdlab.us {
+    reverse_proxy 192.168.0.125:51821
+
+    tls {
+        dns godaddy {
+            api_token {env.GODADDY_API_TOKEN}
+        }
+        propagation_delay 60s
+        propagation_timeout 5m
+    }
+
+    log {
+        output file /var/log/caddy/vpn.access.log
+        format json
     }
 }
