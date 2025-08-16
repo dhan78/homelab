@@ -1,15 +1,26 @@
-jdlab.us, www.jdlab.us {
 
+# Apex domain + www → Node app
+jdlab.us, www.jdlab.us {
     reverse_proxy node_app:3000
 
     tls {
       dns godaddy {
         api_token {env.GODADDY_API_TOKEN}
       }
-            propagation_delay 60s
-            propagation_timeout 5m
-
-
+      propagation_delay 60s
+      propagation_timeout 5m
     }
+}
 
+# Catch-all for any subdomain (desk, api, etc.)
+*.jdlab.us {
+    reverse_proxy node_app:3000
+
+    tls {
+      dns godaddy {
+        api_token {env.GODADDY_API_TOKEN}
+      }
+      propagation_delay 60s
+      propagation_timeout 5m
+    }
 }

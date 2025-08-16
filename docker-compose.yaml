@@ -28,6 +28,8 @@ services:
       context: ./app
       dockerfile: Dockerfile
     container_name: node_app
+    ports:
+      - "3000:3000"
     networks:
       - proxy
     restart: unless-stopped
