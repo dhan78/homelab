@@ -5,14 +5,19 @@ volumes:
 
 services:
   wg-easy:
-    image: ghcr.io/wg-easy/wg-easy:15
+    image: ghcr.io/wg-easy/wg-easy:latest
     container_name: wg-easy
     environment:
       PORT: 51821
       HOST: 0.0.0.0
       INSECURE: "true"
-      WG_DEFAULT_DNS: 1.1.1.1      # DNS pushed to clients
-      WG_HOST: 100.8.26.234        # Replace with your public IP or DDNS
+      WG_PRE_UP: 'iptables -t nat -F; iptables -F;'
+      WG_DEFAULT_DNS: 192.168.0.1      # DNS pushed to clients
+      WG_HOST: 100.8.26.234
+      WG_DEVICE: eth0
+      WG_ALLOWED_IPS: |  # DNS servers should be allowed. You can use "0.0.0.0/0,::/0" instead
+        1.1.1.1,8.8.8.8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,fc00::/7
+        # Replace with your public IP or DDNS
     networks:
       wg:
         ipv4_address: 10.42.42.42
