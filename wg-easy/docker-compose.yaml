@@ -13,7 +13,7 @@ services:
       INSECURE: "true"
       WG_PRE_UP: 'iptables -t nat -F; iptables -F;'
       WG_DEFAULT_DNS: 192.168.0.1      # DNS pushed to clients
-      WG_HOST: 100.8.26.234
+      WG_HOST: vpn.jdlab.us
       WG_DEVICE: eth0
       WG_ALLOWED_IPS: |  # DNS servers should be allowed. You can use "0.0.0.0/0,::/0" instead
         1.1.1.1,8.8.8.8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,fc00::/7
