@@ -1,0 +1,18 @@
+version: "3.9"
+
+services:
+  pihole:
+    image: pihole/pihole:latest
+    container_name: pihole
+    environment:
+      TZ: "America/New_York"
+      FTLCONF_webserver_api_password: "changeme"
+      DNS1: 127.0.0.1#5353      # avoid using port 53 (rootless)
+      DNS2: 1.1.1.1
+    volumes:
+      - ./pihole_data:/etc/pihole:Z
+      - ./dnsmasq_data:/etc/dnsmasq.d:Z
+    ports:
+      - "1053:53/udp"            # rootless-friendly DNS
+      - "8081:80/tcp"            # web admin UI
+    restart: unless-stopped
